@@ -95,4 +95,9 @@ body {
   opacity: 1;
   
 }
+.search{
+  margin-bottom: 30px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
 </style>

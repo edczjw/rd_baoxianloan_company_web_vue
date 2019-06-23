@@ -16,7 +16,7 @@
                     剩余还款天数：<span style="color:red">5{{detail.socialCode}}</span>
                 </el-col>
                 <el-col :span="8">
-                    借款总金额：{{detail.registeredAddress}}
+                    借款总金额（元）：{{detail.registeredAddress}}
                 </el-col>
                 </el-row>
 
@@ -25,34 +25,34 @@
                     借款时间：{{detail.businessAddress}}
                 </el-col>
                 <el-col :span="8">
-                    已还总金额：{{detail.registeredCapital}}
+                    已还总金额（元）：{{detail.registeredCapital}}
                 </el-col>
                 <el-col :span="8">
-                    剩余总金额：{{detail.paidCapital}}
-                </el-col>
-                </el-row>
-
-                <el-row>
-                <el-col :span="8">
-                    已还本金：{{detail.startingDate}}
-                </el-col>
-                <el-col :span="8">
-                    剩余未还本金：{{detail.endingDate}}
-                </el-col>
-                <el-col :span="8">
-                    已还利息：{{detail.legalName}}
+                    剩余总金额（元）：{{detail.paidCapital}}
                 </el-col>
                 </el-row>
 
                 <el-row>
                 <el-col :span="8">
-                    剩余未还利息：{{detail.legalIdCard}}
+                    已还本金（元）：{{detail.startingDate}}
                 </el-col>
                 <el-col :span="8">
-                    已还罚息：{{detail.legalPhone}}
+                    剩余未还本金（元）：{{detail.endingDate}}
                 </el-col>
                 <el-col :span="8">
-                    剩余未还罚息：{{detail.cardNo}}
+                    已还利息（元）：{{detail.legalName}}
+                </el-col>
+                </el-row>
+
+                <el-row>
+                <el-col :span="8">
+                    剩余未还利息（元）：{{detail.legalIdCard}}
+                </el-col>
+                <el-col :span="8">
+                    已还罚息（元）：{{detail.legalPhone}}
+                </el-col>
+                <el-col :span="8">
+                    剩余未还罚息（元）：{{detail.cardNo}}
                 </el-col>
                 </el-row>
                 <el-row>
@@ -66,12 +66,12 @@
                 </div>
                 
                 <div class="smit" v-if="smitshow">
-                            <div class="ed">还款金额：<el-input class="input" size="small" v-model="form.name" placeholder="请输入还款金额(如200)"></el-input>
+                            <div class="ed">还款金额(元)：<el-input class="input" size="mini" v-model="form.name" placeholder="还款金额(如200)"></el-input>
                             </div>
-                            <p>  本次还款冲销金额：{{detail.accountName}}</p>
-                            <p>  冲销本金：{{detail.accountName}}</p>
-                            <p>  冲销利息：{{detail.accountName}}</p>
-                            <p>  冲销罚息：{{detail.accountName}}</p>
+                            <p>  本次还款冲销金额(元)：{{detail.accountName}}</p>
+                            <p>  冲销本金(元)：{{detail.accountName}}</p>
+                            <p>  冲销利息(元)：{{detail.accountName}}</p>
+                            <p>  冲销罚息(元)：{{detail.accountName}}</p>
                         <el-button style="width:100%;margin-top:10px;" type="success">提交</el-button>
 
                 </div>
@@ -178,6 +178,6 @@ export default {
 
 }
 .ed .el-input{
-    width: 65%;
+    width: 56%;
 }
 </style>
