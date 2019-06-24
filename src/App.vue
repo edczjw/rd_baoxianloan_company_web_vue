@@ -100,4 +100,14 @@ body {
   padding: 10px;
   border-bottom: 1px solid #eee;
 }
+.di {
+  text-align: center;
+}
+/* 输入框默认宽度 */
+.el-input {
+  width: 140px !important;
+}
+.ell{
+  width: 100% !important;
+}
 </style>

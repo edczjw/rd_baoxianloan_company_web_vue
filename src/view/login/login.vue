@@ -15,18 +15,23 @@
         class="demo-ruleForm"
       >
         <div class="login-content">
-          <el-form-item label="账号" prop="username">
-            <el-input class="ell" placeholder="请输入手机号" v-model.trim="loginform.username">
-              <template slot="prepend">
-                <i class="el-icon-edit"></i>
-              </template>
-            </el-input>
-          </el-form-item>
+          
+          <el-row :gutter="24">
+            <el-col :span="24">
+              <el-form-item label="账号" prop="username">
+                <el-input class="ell" placeholder="请输入手机号" v-model.trim="loginform.username">
+                  <template slot="prepend">
+                    <i class="el-icon-edit"></i>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </div>
 
         <div class="login-content">
           <el-row :gutter="24">
-            <el-col :span="17">
+            <el-col :span="24">
               <el-form-item label="验证码" prop="password">
                 <el-input
                   class="ell"
@@ -39,19 +44,22 @@
                 </el-input>
               </el-form-item>
               </el-col>
+          </el-row>
 
+            <el-row :gutter="24">
               <el-col :span="6">
-                <el-button icon="el-icon-mobile-phone" :disabled="disabled=!show" type="primary" size="medium" @click="send()">
+                <el-button icon="el-icon-mobile-phone" :disabled="disabled=!show"  type="primary" size="medium" @click="send()">
                   <span v-show="show">获取验证码</span>
                   <span v-show="!show" class="count">{{count}} s</span>
                 </el-button>
               </el-col>
+
+              <el-col :span="18">
+                  <el-button class="butt1" type="primary" size="medium" @click="login('loginform')">登录</el-button>
+              </el-col>
           </el-row>
         </div>
 
-        <div class="button-content">
-          <el-button class="butt1" type="primary" size="medium" @click="login('loginform')">登录</el-button>
-        </div>
       </el-form>
       </div>
 
@@ -226,7 +234,7 @@ h1 {
   font-weight: 700;
   text-shadow: 0 1px 1px #555;
   display: block;
-  margin-block-start: 3.67em;
+  margin-block-start: 2.37em;
   margin-block-end: 0.67em;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
@@ -235,9 +243,9 @@ h1 {
   background-color: #fff;
   position: relative;
   margin: 0 auto;
-  width: 30%;
+  width: 35%;
   height: 380px;
-  margin-top: 70px;
+  margin-top: 30px;
   border: 1px solid black;
 }
 .switch {

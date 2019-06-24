@@ -7,28 +7,30 @@
         </div>
         <el-card class="box-card">
             <div class="search">
-            <el-form ref="form" :model="form" label-width="100px">
+            <el-form ref="form"  size="mini" :model="form" label-width="100px">
                 <el-row :gutter="30">
-                <el-col :span="6">
-                <el-form-item label="订单状态：">
-                    <el-select v-model="form.region" placeholder="请选择订单状态">
+                <el-col :span="8">
+                <el-form-item label="订单状态">
+                    <el-select size="mini" v-model="form.region" placeholder="请选择订单状态">
                     <el-option label="区域一" value="shanghai"></el-option>
                     <el-option label="区域二" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
                 </el-col>
 
-                <el-col :span="6">
-                        <el-button type="primary" @click="resetForm('searchform')">
+                <el-col :span="2">
+                    <div class="di">
+                        <el-button size="mini" type="primary" @click="resetForm('searchform')">
                         重置
                         </el-button>
+                    </div>
                     </el-col>
                 </el-row>
             </el-form>
             </div>
 
               <el-table :data="tableData"  border
-                size="medium" stripe style="width: 100%;">
+                size="mini" stripe style="width: 100%;">
                     <el-table-column prop="processNo" label="订单编号" align="center"> </el-table-column>
                     <el-table-column prop="applyLimit" label="借款金额（元）" align="center"> </el-table-column>
                     <el-table-column prop="applyTerm" label="借款天数（天）" align="center"></el-table-column>

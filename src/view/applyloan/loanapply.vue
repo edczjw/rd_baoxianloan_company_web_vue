@@ -14,10 +14,11 @@
                     status-icon
                     label-width="85px"
                     class="demo-ruleForm"
+                    size="mini"
                 >
                 <el-row :gutter="24">
                     <el-col :span="17">
-                    <el-form-item label="借款金额：" prop="username">
+                    <el-form-item label="借款金额" prop="username">
                         <el-input class="ell" placeholder="借款金额请输入整数" v-model.trim="loginform.username">
                         <template slot="prepend">
                             <i class="el-icon-edit"></i>
@@ -30,7 +31,7 @@
 
                     <el-row :gutter="24">
                         <el-col :span="17">
-                        <el-form-item label="验证码：" prop="password">
+                        <el-form-item label="验证码" prop="password">
                             <el-input
                             class="ell"
                             placeholder="请输入验证码"
@@ -44,7 +45,7 @@
                         </el-col>
 
                         <el-col :span="7">
-                            <el-button icon="el-icon-mobile-phone" :disabled="disabled=!show" type="primary" size="medium" @click="send()">
+                            <el-button icon="el-icon-mobile-phone" :disabled="disabled=!show" type="primary" size="mini" @click="send()">
                             <span v-show="show">获取验证码</span>
                             <span v-show="!show" class="count">{{count}} s</span>
                             </el-button>
@@ -343,7 +344,7 @@ export default {
     width: 100%;
     border-top:1px solid #eee;
     padding: 20px;
-    margin-top: 280px;
+    margin-top: 250px;
     .el-button{
         width: 100%;
     }

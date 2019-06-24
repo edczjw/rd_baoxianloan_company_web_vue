@@ -7,10 +7,10 @@
         </div>
         <el-card class="box-card">
             <div class="search">
-            <el-form ref="form" :model="form" label-width="120px">
+            <el-form ref="form" :model="form" size="mini" label-width="100px">
                 <el-row :gutter="30">
                     <el-col :span="6">
-                        <el-form-item label="选择报表日期：">
+                        <el-form-item label="报表日期">
                             <el-date-picker
                                 v-model="value1"
                                 type="date"
@@ -20,7 +20,7 @@
                     </el-col>
 
                     <el-col :span="6">
-                        <el-form-item label="至：">
+                        <el-form-item label="至">
                             <el-date-picker
                                 v-model="value1"
                                 type="date"
@@ -29,10 +29,10 @@
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="6">
-                        <el-button type="primary" @click="search()">
+                    <el-col :span="12">
+                        <el-button size="mini" type="primary" @click="search()">
                         搜索</el-button>
-                        <el-button type="primary" @click="resetForm('searchform')">
+                        <el-button size="mini" type="primary" @click="resetForm('searchform')">
                         重置
                         </el-button>
                     </el-col>
@@ -40,8 +40,8 @@
             </el-form>
             </div>
 
-              <el-table :data="tableData"  border
-                size="medium" stripe style="width: 100%;">
+              <el-table :data="tableData"  border 
+                size="mini" stripe style="width: 100%;">
                     <el-table-column prop="processNo" label="文件名称" align="center"> </el-table-column>
                     <el-table-column prop="status" label="生产时间" align="center"> </el-table-column>
                     <el-table-column prop="operation" label="操作" align="center">

@@ -66,12 +66,12 @@
                 </div>
                 
                 <div class="smit" v-if="smitshow">
-                            <div class="ed">还款金额(元)：<el-input class="input" size="mini" v-model="form.name" placeholder="还款金额(如200)"></el-input>
+                            <div class="ed">还款本金(元)：<el-input class="input" size="mini" v-model="form.name" placeholder="还款金额(如200)"></el-input>
                             </div>
-                            <p>  本次还款冲销金额(元)：{{detail.accountName}}</p>
-                            <p>  冲销本金(元)：{{detail.accountName}}</p>
-                            <p>  冲销利息(元)：{{detail.accountName}}</p>
-                            <p>  冲销罚息(元)：{{detail.accountName}}</p>
+                            <p>  还款本金(元)：{{detail.accountName}}</p>
+                            <p>  还款利息(元)：{{detail.accountName}}</p>
+                            <!-- <p>  冲销罚息(元)：{{detail.accountName}}</p> -->
+                            <p>  本次还款总金额(元)：{{detail.accountName}}</p>
                         <el-button style="width:100%;margin-top:10px;" type="success">提交</el-button>
 
                 </div>
