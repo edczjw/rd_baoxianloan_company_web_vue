@@ -18,6 +18,10 @@ router.afterEach((to,from,next) => {
   window.scrollTo(0,0);
 });
 
+if (module.hot) {
+  module.hot.accept();
+}
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

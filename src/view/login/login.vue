@@ -18,8 +18,8 @@
           
           <el-row :gutter="24">
             <el-col :span="24">
-              <el-form-item label="账号" prop="username">
-                <el-input class="ell" placeholder="请输入手机号" v-model.trim="loginform.username">
+              <el-form-item label="账号" prop="account">
+                <el-input class="ell" placeholder="请输入手机号" v-model.trim="loginform.account">
                   <template slot="prepend">
                     <i class="el-icon-edit"></i>
                   </template>
@@ -32,11 +32,11 @@
         <div class="login-content">
           <el-row :gutter="24">
             <el-col :span="24">
-              <el-form-item label="验证码" prop="password">
+              <el-form-item label="验证码" prop="verification">
                 <el-input
                   class="ell"
                   placeholder="请输入验证码"
-                  v-model.trim="loginform.password"
+                  v-model.trim="loginform.verification"
                 >
                   <template slot="prepend">
                     <i class="el-icon-view"></i>
@@ -87,13 +87,15 @@ export default {
 
       // 登录表单
       loginform: {
-        username: "",
-        password: ""
+        phone:"",
+        account: "",
+        verification: "",
+        smsType:1
       },
 
       //输入框验证
       rules: {
-        username: [
+        account: [
           { required: true, message: "账号不能为空。", trigger: "blur" },
           { max: 11, message: "长度 11 个字符。", trigger: "blur" },
           {
@@ -124,6 +126,26 @@ export default {
   mounted() {},
   methods: {
     send(){   
+      this.$axios({
+                    method: 'post',
+                    url: this.$store.state.domain +"/biz/user/getSmsVerification",
+                    data:{
+                      account:this.loginform.account,
+                      smsType:this.loginform.smsType
+                    }
+                })
+                .then(
+                    response => {
+                    if(response.data.code==0){
+                    }else{
+                        this.$message.error(response.data.msg);
+                    }
+                    },
+                    response => {
+                    console.log(response);
+                    }
+                  )
+
       const TIME_COUNT = 60; //更改倒计时时间
             if (!this.timer) {
                 this.count = TIME_COUNT;
@@ -131,6 +153,7 @@ export default {
                 this.timer = setInterval(() => {
                   if (this.count > 0 && this.count <= TIME_COUNT) {
                     this.count--;
+                    
                   } else {
                     this.show = true;
                     clearInterval(this.timer);  // 清除定时器
@@ -148,7 +171,7 @@ export default {
         if (valid) {
           this.$axios({
             method: "post",
-            url: this.$store.state.domain + "/biz/user/login",
+            url: this.$store.state.domain + "/biz/getOrderState",
             data: this.loginform
           }).then(
             response => {
@@ -178,26 +201,6 @@ export default {
                   type: "success"
                 });
 
-                if (accountStatus == 2) {
-                  //已开户
-                  this.$router.push("/mshome"); //跳转
-                  console.log(accountStatus + "跳转到主页");
-                } else if (accountStatus == 0) {
-                  this.$router.push("/creatuser/creatus");
-                  console.log(accountStatus + "创建账户");
-                  this.$store.state.buttonshow = true; //隐藏开户提交按钮
-                } else if (
-                  accountStatus == 1 ||
-                  accountStatus == 4 ||
-                  accountStatus == 5
-                ) {
-                  this.$router.push("/creatuser/creatus");
-                  console.log(accountStatus + "创建账户");
-                  this.$store.state.buttonshow = false; //隐藏开户提交按钮
-                } else if (accountStatus == 3) {
-                  this.$router.push("/failcreatuser/failcreatus");
-                  console.log(accountStatus + "创建账户失败");
-                }
               } else {
                 this.$message.error(response.data.msg);
               }

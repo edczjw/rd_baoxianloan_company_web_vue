@@ -12,7 +12,7 @@
                     <el-col :span="6">
                         <el-form-item label="报表日期">
                             <el-date-picker
-                                v-model="value1"
+                                v-model="this.form.beginDate"
                                 type="date"
                                 placeholder="选择开始日期">
                                 </el-date-picker>
@@ -22,7 +22,7 @@
                     <el-col :span="6">
                         <el-form-item label="至">
                             <el-date-picker
-                                v-model="value1"
+                                v-model="this.form.endDate"
                                 type="date"
                                 placeholder="选择结束日期">
                                 </el-date-picker>
@@ -30,9 +30,11 @@
                     </el-col>
 
                     <el-col :span="12">
+                        <el-button size="mini" type="primary" @click="make()">
+                        生成报表</el-button>
                         <el-button size="mini" type="primary" @click="search()">
-                        搜索</el-button>
-                        <el-button size="mini" type="primary" @click="resetForm('searchform')">
+                        查询报表</el-button>
+                        <el-button size="mini" type="primary" @click="resetForm('form')">
                         重置
                         </el-button>
                     </el-col>
@@ -42,15 +44,9 @@
 
               <el-table :data="tableData"  border 
                 size="mini" stripe style="width: 100%;">
-                    <el-table-column prop="processNo" label="文件名称" align="center"> </el-table-column>
-                    <el-table-column prop="status" label="生产时间" align="center"> </el-table-column>
-                    <el-table-column prop="operation" label="操作" align="center">
-                        <!-- 点击某个客户姓名查看详情 -->
-                        <template slot-scope="scope">
-                            <el-button type="text" size="small"
-                            @click="gouserdetail(scope.row.operation,scope.row.status)">
-                            {{scope.row.operation}}</el-button>
-                        </template>
+                    <el-table-column prop="fileName" label="文件名称" align="center"> </el-table-column>
+                    <el-table-column prop="createTime" label="生成时间" align="center"> </el-table-column>
+                    <el-table-column prop="downloadUrl" label="操作" align="center">
                 </el-table-column>
             </el-table>
         </el-card>
@@ -78,37 +74,55 @@ export default {
             tableData:[],
 
             form:{
+                beginDate:"",
+                endDate:""
             }
         }
     },
     mounted() {
-        // this.getlist();
+        this.getlist();
     },
     methods: {
-        //点击操作跳转
-        gouserdetail(operation,status){
-            this.$router.push({
-                path:"/orderbasedetail",
-                query:{
-                    operation:operation,
-                    status:status
-                    }
-                })
-        },
-
-        getlist(){
-            this.searchform.enterpriseNo = sessionStorage.getItem("enterpriseNo");
+        // 搜索功能
+      search() {
+        this.getlist();
+      },
+        make(){
+            this.form.channelCd = sessionStorage.getItem("channelCd");
             this.$axios({
                         method: 'post',
-                        url: this.$store.state.domain +"/biz/order/list",
-                        data: this.searchform,
+                        url: this.$store.state.domain +"/biz/createReport",
+                        data: this.form,
                     })
                     .then(
                         response => {
                         if(response.data.code==0){
                              this.tableData = response.data.detail.result.pageList;
-                             this.searchform.pageSize = response.data.detail.result.pageSize
-                             this.searchform.pageIndex = response.data.detail.result.pageIndex
+                             this.form.pageSize = response.data.detail.result.pageSize
+                             this.form.pageIndex = response.data.detail.result.pageIndex
+                             this.count = response.data.detail.result.count
+                        }else{
+                            this.$message.error(response.data.msg);
+                        }
+                        },
+                        response => {
+                        console.log(response);
+                        }
+                     )
+        },
+        getlist(){
+            this.form.channelCd = sessionStorage.getItem("channelCd");
+            this.$axios({
+                        method: 'post',
+                        url: this.$store.state.domain +"/biz/getReport",
+                        data: this.form,
+                    })
+                    .then(
+                        response => {
+                        if(response.data.code==0){
+                             this.tableData = response.data.detail.result.pageList;
+                             this.form.pageSize = response.data.detail.result.pageSize
+                             this.form.pageIndex = response.data.detail.result.pageIndex
                              this.count = response.data.detail.result.count
                         }else{
                             this.$message.error(response.data.msg);
@@ -123,15 +137,15 @@ export default {
         // 初始每页数据数pagesize
       handleSizeChange(psize) {
         // 改变每页显示的条数
-        this.searchform.pageSize = psize;
+        this.form.pageSize = psize;
         // 注意：在改变每页显示的条数时，要将页码显示到第一页
-        this.searchform.pageIndex =1;
+        this.form.pageIndex =1;
         this.getlist();
       },
 
       // 初始页currentPage
       handleCurrentChange(pindex) {
-        this.searchform.pageIndex = pindex;
+        this.form.pageIndex = pindex;
         this.getlist();
       },
     },
