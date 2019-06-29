@@ -87,7 +87,6 @@ export default {
 
       // 登录表单
       loginform: {
-        phone:"",
         account: "",
         verification: "",
         smsType:1
@@ -125,8 +124,14 @@ export default {
   },
   mounted() {},
   methods: {
-    send(){   
-      this.$axios({
+    send(){    
+      const TIME_COUNT = 180; //更改倒计时时间
+            if (!this.timer) {
+
+                this.count = TIME_COUNT;
+                this.show = false;
+
+                this.$axios({
                     method: 'post',
                     url: this.$store.state.domain +"/biz/user/getSmsVerification",
                     data:{
@@ -136,20 +141,13 @@ export default {
                 })
                 .then(
                     response => {
-                    if(response.data.code==0){
-                    }else{
-                        this.$message.error(response.data.msg);
-                    }
+                        console.log(response);
                     },
                     response => {
-                    console.log(response);
+                        console.log(response);
                     }
                   )
 
-      const TIME_COUNT = 60; //更改倒计时时间
-            if (!this.timer) {
-                this.count = TIME_COUNT;
-                this.show = false;
                 this.timer = setInterval(() => {
                   if (this.count > 0 && this.count <= TIME_COUNT) {
                     this.count--;
@@ -171,42 +169,34 @@ export default {
         if (valid) {
           this.$axios({
             method: "post",
-            url: this.$store.state.domain + "/biz/getOrderState",
+            url: this.$store.state.domain + "/biz/user/login",
             data: this.loginform
           }).then(
             response => {
               if (response.data.code == 0) {
                 //开户状态、用户名、企业编号
-                var accountStatus = response.data.detail.accountStatus;
-                var username = response.data.detail.username;
-
-                //未开户时不返回
-                if (
-                  response.data.detail.enterpriseNo != "" ||
-                  response.data.detail.enterpriseNo != null
-                ) {
-                  var enterpriseNo = response.data.detail.enterpriseNo;
-                }
-
-                console.log(username);
+                var account = response.data.detail.account;
+                var channelCd = response.data.detail.channelCd
 
                 //存储状态、用户名、企业编号
-                sessionStorage.setItem("accountStatus", accountStatus);
-                sessionStorage.setItem("username", username);
-                sessionStorage.setItem("enterpriseNo", enterpriseNo);
+                sessionStorage.setItem("account", account);
+                sessionStorage.setItem("channelCd", channelCd);
 
                 //登录成功
                 this.$message({
-                  message: "恭喜你" + response.data.msg,
+                  message: "恭喜你登陆成功！",
                   type: "success"
                 });
+
+                
+                  this.$router.push("/mshome");//跳转
 
               } else {
                 this.$message.error(response.data.msg);
               }
             },
             response => {
-              console.log(response);
+              this.$message.error(response);
             }
           );
         } else {

@@ -7,10 +7,10 @@
         </div>
         <el-card class="box-card">
             <div class="applymo">
-                <div class="keyong">当前可用额度： 50000000</div>
+                <div class="keyong">当前可用额度： {{this.availableCredit}}</div>
                 <el-form
                     ref="loginform"
-                    :model="this.loginform"
+                    :model="this.checkform"
                     status-icon
                     label-width="85px"
                     class="demo-ruleForm"
@@ -18,8 +18,8 @@
                 >
                 <el-row :gutter="24">
                     <el-col :span="17">
-                    <el-form-item label="借款金额" prop="username">
-                        <el-input class="ell" placeholder="借款金额请输入整数" v-model.trim="loginform.username">
+                    <el-form-item label="借款金额" prop="applyLimit">
+                        <el-input class="ell" placeholder="借款金额请输入整数" v-model.trim="checkform.applyLimit">
                         <template slot="prepend">
                             <i class="el-icon-edit"></i>
                         </template>
@@ -31,11 +31,11 @@
 
                     <el-row :gutter="24">
                         <el-col :span="17">
-                        <el-form-item label="验证码" prop="password">
+                        <el-form-item label="验证码" prop="verifyCode">
                             <el-input
                             class="ell"
                             placeholder="请输入验证码"
-                            v-model.trim="loginform.password"
+                            v-model.trim="checkform.verifyCode"
                             >
                             <template slot="prepend">
                                 <i class="el-icon-view"></i>
@@ -78,13 +78,13 @@
             <div class="dibu">
 
             <div class="checkbox">
-                <el-checkbox prop="agreementStatus">已同意并愿意接受 
+                <el-checkbox prop="agreementStatus" v-model="agreementStatus">已同意并愿意接受 
                     <router-link to="">
                     《借款协议》
                     </router-link> 
                 </el-checkbox>          
             </div>
-                <el-button type="success">提交</el-button>
+                <el-button type="success" @click="submit()">提交</el-button>
             </div>
         </el-card>
 
@@ -99,22 +99,115 @@ export default {
             show: true,  // 初始启用按钮
             count: '',   // 初始化次数
             timer: null,
+            agreementStatus:false,//勾选
             
-            fileList1:[],//文件容器
+            fileList:[],//文件容器
             videoFlag:false,//进度条
             videoUploadPercent:0,
 
+            availableCredit:"",//可用额度
+
             // 登录表单
-            loginform: {
-                username: "",
-                password: ""
+            searchform: {
+                channelCd: ""
             },
+
+            form:{
+                account: "",
+                smsType:2
+            },
+
+            checkform:{
+                channelCd:"",
+                applyLimit:"",
+                agreementUrl:"",
+                verifyCode:"",
+            }
         }
     },
     mounted() {
-        // this.getlist();
+        this.getavailableCredit();
     },
     methods: {
+        getavailableCredit(){
+        this.searchform.channelCd = sessionStorage.getItem("channelCd");
+        this.$axios({
+                    method: 'post',
+                    url: this.$store.state.domain +"/biz/loan/availableCredit",
+                    data:this.searchform
+                })
+                .then(
+                    response => {
+                    if(response.data.code==0){
+                            this.availableCredit = response.data.detail.result.availableCredit;
+                    }else{
+                        this.$message.error(response.data.msg);
+                    }
+                    },
+                    response => {
+                    console.log(response);
+                    }
+                    )
+        },
+
+        send(){
+            const TIME_COUNT = 180; //更改倒计时时间
+                if (!this.timer) {
+                    this.count = TIME_COUNT;
+                    this.show = false;
+                    this.form.account = sessionStorage.getItem("account");
+                    
+                    this.$axios({
+                        method: 'post',
+                        url: this.$store.state.domain +"/biz/user/getSmsVerification",
+                        data:this.form
+                    })
+                    .then(
+                        response => {
+                            console.log(response);
+                        },
+                        response => {
+                            console.log(response);
+                        }
+                    )
+                    this.timer = setInterval(() => {
+                    if (this.count > 0 && this.count <= TIME_COUNT) {
+                        this.count--;
+                    } else {
+                        this.show = true;
+                        clearInterval(this.timer);  // 清除定时器
+                        this.timer = null;
+                    }
+                    }, 1000)
+                }
+        
+        },
+
+        submit(){
+        if(this.agreementStatus==true){
+        this.checkform.channelCd = sessionStorage.getItem("channelCd");
+        this.$axios({
+                    method: 'post',
+                    url: this.$store.state.domain +"/biz/order/apply",
+                    data:this.checkform
+                })
+                .then(
+                    response => {
+                    if(response.data.code==0){
+                            console.log(response.data.msg);
+                    }else{
+                        this.$message.error(response.data.msg);
+                    }
+                    },
+                    response => {
+                    console.log(response.data.msg);
+                    }
+                    )
+            }else{
+                this.$message.error("必须勾选同意并接受借款协议！");
+            }
+        },
+
         beforeAvatarUpload(file) {
         const length = this.fileList.length <= 2;
         const isLt20M = file.size / 1024 / 1024 < 20;
@@ -130,7 +223,7 @@ export default {
       },
         //对文件列表进行控制
       handleChange(file, fileList) {
-        this.fileList = fileList.slice(-3);
+        this.fileList = fileList.slice(-2);
       },
       handleExceed(files, fileList) {
         this.$message.warning(`当前限制选择 2 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
@@ -138,7 +231,7 @@ export default {
         //上传
       Upload(file) {
           var _that=this;
-        this.videoFlag1= true;
+        this.videoFlag= true;
         const OSS = require('ali-oss');
             let _self = this;
             var bucket;//OSS文件名称
@@ -148,7 +241,7 @@ export default {
             var accessKeySecret;
         this.$axios({
             method: 'post',
-            url: this.$store.state.domain +"/biz/getAliyunOss"
+            url: this.$store.state.domain +"/biz/getOssProperties"
             })
             .then(
                 response => {// 向后台发请求 拉取OSS相关配置
@@ -164,8 +257,6 @@ export default {
 
                     // 存储路径，并且给图片改成唯一名字
                     var fileName = file.file.name 
-                    
-                    this.cooperativeClients.push(fileName)
 
                     //后缀名
                     const suffix = fileName.substr(fileName.indexOf("."));
@@ -177,13 +268,12 @@ export default {
                     const obj2=this.timestamp1();
 
                     //获取企业编号
-                    const enterpriseNo = sessionStorage.getItem("enterpriseNo");
+                    const channelCd = sessionStorage.getItem("channelCd");
 
-                    const storeAs = 'test/meson/msscloan/file/enterprise/'+obj+'/'+enterpriseNo+'/cooperative/'+obj2+'-'
+                    const storeAs = 'test-bx/bxmeson/bxmsscloan/file/enterprise/'+obj+'/'+channelCd+'/cooperative/'+obj2+'-'
                     +fileName
 
-                    this.form.cooperativeClients.push('http://mssaas.oss-cn-shenzhen.aliyuncs.com/'+storeAs)
-                    console.log(this.form.cooperativeClients)
+                    this.checkform.agreementUrl='http://mssaas.oss-cn-shenzhen.aliyuncs.com/'+storeAs
 
                     //上传
                     client.multipartUpload(storeAs,file.file,{
@@ -207,7 +297,7 @@ export default {
                             offset: 100,
                             dangerouslyUseHTMLString: true,
                             message: '<strong>'+file.file.name+'文件上传成功！</strong>',
-                            position: 'bottom-left'
+                            position: 'bottom-right'
                             });
                         }
 
@@ -253,22 +343,6 @@ export default {
         Add1:function(m){  
             return m<10?'0'+m : m;  
         } ,
-        send(){   
-        const TIME_COUNT = 60; //更改倒计时时间
-                if (!this.timer) {
-                    this.count = TIME_COUNT;
-                    this.show = false;
-                    this.timer = setInterval(() => {
-                    if (this.count > 0 && this.count <= TIME_COUNT) {
-                        this.count--;
-                    } else {
-                        this.show = true;
-                        clearInterval(this.timer);  // 清除定时器
-                        this.timer = null;
-                    }
-                    }, 1000)
-                }
-            },
         //点击操作跳转
         gouserdetail(operation,status){
             this.$router.push({
@@ -280,29 +354,7 @@ export default {
                 })
         },
 
-        getlist(){
-            this.searchform.enterpriseNo = sessionStorage.getItem("enterpriseNo");
-            this.$axios({
-                        method: 'post',
-                        url: this.$store.state.domain +"/biz/order/list",
-                        data: this.searchform,
-                    })
-                    .then(
-                        response => {
-                        if(response.data.code==0){
-                             this.tableData = response.data.detail.result.pageList;
-                             this.searchform.pageSize = response.data.detail.result.pageSize
-                             this.searchform.pageIndex = response.data.detail.result.pageIndex
-                             this.count = response.data.detail.result.count
-                        }else{
-                            this.$message.error(response.data.msg);
-                        }
-                        },
-                        response => {
-                        console.log(response);
-                        }
-                     )
-        },
+        
 
     },
 }
@@ -344,7 +396,7 @@ export default {
     width: 100%;
     border-top:1px solid #eee;
     padding: 20px;
-    margin-top: 250px;
+    margin-top: 330px;
     .el-button{
         width: 100%;
     }

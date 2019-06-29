@@ -55,7 +55,7 @@ export default {
     },
     //获取用户名，vue 本地存储数据 sessionStorage
     getName() {
-      let userName = sessionStorage.getItem("username");
+      let userName = sessionStorage.getItem("account");
       this.userName = userName;
     },
 
@@ -95,8 +95,6 @@ export default {
       this.$confirm('确认退出吗?', '提示', {
         //type: 'warning'
       }).then(() => {
-        // sessionStorage.removeItem('user');
-        sessionStorage.setItem("name", 'str');//本地存储用户名
         this.$router.push('/login');
       }).catch(() => {
 

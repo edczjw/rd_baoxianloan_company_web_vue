@@ -12,18 +12,20 @@
                     <el-col :span="6">
                         <el-form-item label="报表日期">
                             <el-date-picker
-                                v-model="this.form.beginDate"
+                                v-model="form.beginDate"
                                 type="date"
+                                value-format="yyyy-MM-dd"
                                 placeholder="选择开始日期">
                                 </el-date-picker>
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="6">
+                    <el-col :span="4">
                         <el-form-item label="至">
                             <el-date-picker
-                                v-model="this.form.endDate"
+                                v-model="form.endDate"
                                 type="date"
+                                value-format="yyyy-MM-dd"
                                 placeholder="选择结束日期">
                                 </el-date-picker>
                         </el-form-item>
@@ -80,7 +82,7 @@ export default {
         }
     },
     mounted() {
-        this.getlist();
+        // this.getlist();
     },
     methods: {
         // 搜索功能
@@ -120,7 +122,7 @@ export default {
                     .then(
                         response => {
                         if(response.data.code==0){
-                             this.tableData = response.data.detail.result.pageList;
+                             this.tableData = response.data.detail.result;
                              this.form.pageSize = response.data.detail.result.pageSize
                              this.form.pageIndex = response.data.detail.result.pageIndex
                              this.count = response.data.detail.result.count
