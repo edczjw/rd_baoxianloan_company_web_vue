@@ -13,12 +13,13 @@
         status-icon
         label-width="65px"
         class="demo-ruleForm"
+         :rules="rules"
       >
         <div class="login-content">
           
           <el-row :gutter="24">
             <el-col :span="24">
-              <el-form-item label="账号" prop="account">
+              <el-form-item label="账号" prop="account" :rules="rules.account">
                 <el-input class="ell" placeholder="请输入手机号" v-model.trim="loginform.account">
                   <template slot="prepend">
                     <i class="el-icon-edit"></i>
@@ -47,14 +48,15 @@
           </el-row>
 
             <el-row :gutter="24">
-              <el-col :span="6">
-                <el-button icon="el-icon-mobile-phone" :disabled="disabled=!show"  type="primary" size="medium" @click="send()">
+              <el-col :span="8">
+                <el-button icon="el-icon-mobile-phone" :disabled="disabled=!show"  type="primary" size="medium" 
+                @click="send('loginform')">
                   <span v-show="show">获取验证码</span>
                   <span v-show="!show" class="count">{{count}} s</span>
                 </el-button>
               </el-col>
 
-              <el-col :span="18">
+              <el-col :span="16">
                   <el-button class="butt1" type="primary" size="medium" @click="login('loginform')">登录</el-button>
               </el-col>
           </el-row>
@@ -72,14 +74,6 @@ import Router from "vue-router";
 import $ from "jquery";
 export default {
   data() {
-    // 确认密码校验
-    var validatePass2 = (rule, value, callback) => {
-      if (value !== this.registform.password) {
-        callback(new Error("两次输入密码不一致!"));
-      } else {
-        callback();
-      }
-    };
     return {
       show: true,  // 初始启用按钮
       count: '',   // 初始化次数
@@ -97,68 +91,57 @@ export default {
         account: [
           { required: true, message: "账号不能为空。", trigger: "blur" },
           { max: 11, message: "长度 11 个字符。", trigger: "blur" },
-          {
-            pattern: /^1[34578]\d{9}$/,
-            message: "请输入正确的手机号码。",
-            trigger: "blur"
-          }
-        ],
-        password: [
-          { required: true, message: "密码不能为空。", trigger: "blur" }
-          // { min: 8, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur' }
-        ],
-        realpassword: [
-          { required: true, message: "不能为空。", trigger: "blur" },
-          { validator: validatePass2, trigger: "blur" }
-        ],
-        agreementStatus: [
-          {
-            type: "array",
-            required: true,
-            message: "请至少选择一个活动性质",
-            trigger: "change"
-          }
+          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码。', trigger: 'blur'},
         ]
       }
     };
   },
   mounted() {},
   methods: {
-    send(){    
-      const TIME_COUNT = 180; //更改倒计时时间
-            if (!this.timer) {
+    send(formName){    
+      this.$refs[formName].validate((valid) => {
+          if (valid) {
+            const TIME_COUNT = 60; //更改倒计时时间
+                  if (!this.timer) {
 
-                this.count = TIME_COUNT;
-                this.show = false;
+                      this.count = TIME_COUNT;
+                      this.show = false;
 
-                this.$axios({
-                    method: 'post',
-                    url: this.$store.state.domain +"/biz/user/getSmsVerification",
-                    data:{
-                      account:this.loginform.account,
-                      smsType:this.loginform.smsType
+                      this.$axios({
+                          method: 'post',
+                          url: this.$store.state.domain +"/biz/user/getSmsVerification",
+                          data:{
+                            account:this.loginform.account,
+                            smsType:this.loginform.smsType
+                          }
+                      })
+                      .then(
+                          response => {
+                            if(response.data.code==1){
+                              this.$message.error(response.data.msg);
+                            }
+                          },
+                          response => {
+                              console.log(response);
+                          }
+                        )
+
+                      this.timer = setInterval(() => {
+                        if (this.count > 0 && this.count <= TIME_COUNT) {
+                          this.count--;
+                          
+                        } else {
+                          this.show = true;
+                          clearInterval(this.timer);  // 清除定时器
+                          this.timer = null;
+                        }
+                      }, 1000)
                     }
-                })
-                .then(
-                    response => {
-                        console.log(response);
-                    },
-                    response => {
-                        console.log(response);
-                    }
-                  )
-
-                this.timer = setInterval(() => {
-                  if (this.count > 0 && this.count <= TIME_COUNT) {
-                    this.count--;
-                    
-                  } else {
-                    this.show = true;
-                    clearInterval(this.timer);  // 清除定时器
-                    this.timer = null;
-                  }
-                }, 1000)
-              }
+        } else {
+              console.log('error submit!!');
+              return false;
+            }
+        })
         },
     //登录
     login(formName) {
@@ -236,7 +219,7 @@ h1 {
   background-color: #fff;
   position: relative;
   margin: 0 auto;
-  width: 35%;
+  width: 38%;
   height: 380px;
   margin-top: 30px;
   border: 1px solid black;

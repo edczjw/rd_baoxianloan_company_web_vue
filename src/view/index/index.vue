@@ -32,8 +32,8 @@ export default {
     };
   },
   mounted() {
-    // this.getName();
-    // this.tologin();//判断是否登陆
+    this.getName();
+    this.tologin();//判断是否登陆
     window.addEventListener("scroll", this.returntop, true); // 监听（绑定）滚轮滚动事件
   },
   methods: {
@@ -86,7 +86,7 @@ export default {
 
     //获取用户名，vue 本地存储数据 sessionStorage
     getName() {
-      let userName = sessionStorage.getItem("username");
+      let userName = sessionStorage.getItem("account");
       this.userName = userName;
     }
   },

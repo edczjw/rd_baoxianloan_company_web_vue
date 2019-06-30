@@ -6,19 +6,19 @@
         </el-row>
         </div>
         <el-card class="box-card">
+                <div class="keyong"><i class="el-icon-share"></i> 当前可用额度(元)： {{this.availableCredit}}</div>
             <div class="applymo">
-                <div class="keyong">当前可用额度： {{this.availableCredit}}</div>
                 <el-form
                     ref="loginform"
                     :model="this.checkform"
                     status-icon
-                    label-width="85px"
+                    label-width="105px"
                     class="demo-ruleForm"
                     size="mini"
                 >
                 <el-row :gutter="24">
                     <el-col :span="17">
-                    <el-form-item label="借款金额" prop="applyLimit">
+                    <el-form-item label="借款金额(元)" prop="applyLimit">
                         <el-input class="ell" placeholder="借款金额请输入整数" v-model.trim="checkform.applyLimit">
                         <template slot="prepend">
                             <i class="el-icon-edit"></i>
@@ -58,7 +58,7 @@
                 <el-upload
                     class="upload-demo"
                     drag
-                    :limit="5"
+                    :limit="2"
                     :http-request="Upload"
                     :file-list='fileList'
                     :on-exceed="handleExceed"
@@ -79,9 +79,9 @@
 
             <div class="checkbox">
                 <el-checkbox prop="agreementStatus" v-model="agreementStatus">已同意并愿意接受 
-                    <router-link to="">
-                    《借款协议》
-                    </router-link> 
+                    <a href="https://yixiangweilai.oss-cn-shenzhen.aliyuncs.com/jiekuanxieyi/%E5%80%9F%E6%AC%BE%E5%90%88%E5%90%8C%EF%BC%88%E4%BC%81%E4%B8%9A%E7%BA%BF%E4%B8%8A%E7%89%88%EF%BC%89%EF%BC%8D%E6%98%93%E4%BA%AB%E9%A1%B9%E7%9B%AE%EF%BC%8D%E5%AE%9A%E7%A8%BF1.0%20%E4%B8%8D%E5%8E%BB%E6%A1%86%284%29%281%29%282%29.pdf" target="_blank">
+                    《借款协议》</a>
+                    
                 </el-checkbox>          
             </div>
                 <el-button type="success" @click="submit()">提交</el-button>
@@ -151,7 +151,7 @@ export default {
         },
 
         send(){
-            const TIME_COUNT = 180; //更改倒计时时间
+            const TIME_COUNT = 60; //更改倒计时时间
                 if (!this.timer) {
                     this.count = TIME_COUNT;
                     this.show = false;
@@ -164,7 +164,9 @@ export default {
                     })
                     .then(
                         response => {
-                            console.log(response);
+                            if(response.data.code==1){
+                              this.$message.error(response.data.msg);
+                            }
                         },
                         response => {
                             console.log(response);
@@ -184,7 +186,20 @@ export default {
         },
 
         submit(){
-        if(this.agreementStatus==true){
+        if(this.availableCredit < this.checkform.applyLimit || this.checkform.applyLimit<1000 || this.checkform.applyLimit>500000)
+        {   
+            this.$confirm('申请借款金额不得高于当前可用额度，并且一次不得低于1000元，不得高于500000元.', '提示', {
+          confirmButtonText: '确定',
+          showCancelButton:false,
+          type: 'warning'
+        }).then(() => {
+
+        }).catch(() => {
+
+        });
+           
+           }else{
+        if(this.agreementStatus==true ){
         this.checkform.channelCd = sessionStorage.getItem("channelCd");
         this.$axios({
                     method: 'post',
@@ -206,11 +221,18 @@ export default {
             }else{
                 this.$message.error("必须勾选同意并接受借款协议！");
             }
+            
+        }
         },
 
         beforeAvatarUpload(file) {
         const length = this.fileList.length <= 2;
         const isLt20M = file.size / 1024 / 1024 < 20;
+        const isJPG = file.type === 'image/jpeg'||'image/png'||'image/bmp'||'image/jpg';
+        
+        if (!isJPG) {
+          this.$message.error('只能上传jpg/png/bmp/jpeg格式！');
+        }
 
         if (!length) {
           this.$message.error('此项上传文件数量不得大于2份，上传第3份文件失败！');
@@ -219,7 +241,7 @@ export default {
         if (!isLt20M) {
           this.$message.error('上传文件大小不能超过 20MB，此文件上传失败!');
         }
-        return length && isLt20M;
+        return isJPG && length && isLt20M;
       },
         //对文件列表进行控制
       handleChange(file, fileList) {
@@ -270,11 +292,16 @@ export default {
                     //获取企业编号
                     const channelCd = sessionStorage.getItem("channelCd");
 
-                    const storeAs = 'test-bx/bxmeson/bxmsscloan/file/enterprise/'+obj+'/'+channelCd+'/cooperative/'+obj2+'-'
+                    const storeAs = 'test/meson/'+channelCd+'/file/bxenterprise/'+obj+'/cooperative/'+obj2+'-'
                     +fileName
 
-                    this.checkform.agreementUrl='http://mssaas.oss-cn-shenzhen.aliyuncs.com/'+storeAs
+                    if(this.checkform.agreementUrl == ''){
+                        this.checkform.agreementUrl='http://yixiangweilai.oss-cn-shenzhen.aliyuncs.com/'+storeAs
+                    }else{
+                        this.checkform.agreementUrl=this.checkform.agreementUrl+',http://yixiangweilai.oss-cn-shenzhen.aliyuncs.com/'+storeAs
+                    }
 
+                    console.log(this.checkform.agreementUrl)
                     //上传
                     client.multipartUpload(storeAs,file.file,{
                         progress:function (p) { //获取进度条的值
@@ -370,33 +397,36 @@ export default {
     padding: 40px;
 }
 .applymo{
-    width: 55%;
+    width: 100%;
     font-size: 14px;
-    border-right: 1px solid #eee;
-    float: left;
+    border: 1px dotted rgb(62, 241, 202);
+    padding: 20px 10px;
+    text-align: center;
 }
 .keyong{
     font-family: '苹方';
-    line-height: 20px;
+    line-height: 22px;
     font-size: 18px;
     margin-bottom: 30px;
     color: rgb(240, 42, 35);
     cursor: pointer;
-    padding: 20px 20px 10px 0;
-    border-radius: 10px;
-    width: 310px;
-    text-align: center;
+    padding: 20px 20px 20px 10px;
+    border-radius: 20px;
+    width: 390px;
+    text-align: left;
+    font-weight: bolder;
+    border: 1px solid rgb(241, 178, 62);
 }
 .submit-image{
     text-align: center;
-    width: 45%;
-    float: right;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px dotted rgb(62, 241, 202);
 }
 .dibu{
     width: 100%;
-    border-top:1px solid #eee;
     padding: 20px;
-    margin-top: 330px;
+    margin-top: 10px;
     .el-button{
         width: 100%;
     }

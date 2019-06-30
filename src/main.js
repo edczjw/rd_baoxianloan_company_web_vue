@@ -9,10 +9,13 @@ import 'element-ui/lib/theme-chalk/index.css'
 import animate from 'animate.css'
 //引入vuex
 import store from './store'
+//需要引用vue-resource
+import VueResource from 'vue-resource'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(animate)
+Vue.use(VueResource)
 Vue.prototype.$axios = axios
 router.afterEach((to,from,next) => {
   window.scrollTo(0,0);

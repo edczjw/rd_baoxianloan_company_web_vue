@@ -84,7 +84,7 @@ export default {
             tableData:[],
 
             form:{
-                channelCd:"JR0001",
+                channelCd:"",
                 status:"",
                 pageIndex:1,//初始页
                 pageSize: 50,//显示当前行的条数
@@ -139,7 +139,7 @@ export default {
                      )
         },
         getlist(){
-            // this.searchform.enterpriseNo = sessionStorage.getItem("enterpriseNo");
+            this.form.channelCd = sessionStorage.getItem("channelCd");
             this.$axios({
                         method: 'post',
                         url: this.$store.state.domain +"/biz/getOrderState",

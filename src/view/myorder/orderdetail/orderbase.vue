@@ -124,7 +124,7 @@ export default {
                     .then(
                         response => {
                         if(response.data.code==0){
-                            this.details = response.data.detail.result
+                            this.$message.success('恭喜你，提交成功！');
                         }else{
                             this.$message.error(response.data.msg);
                         }
@@ -215,7 +215,7 @@ export default {
     border-bottom:1px solid #eee;
 }
 .tap {
-    width: 70%;
+    width: 67%;
     float: right;
 }
 .tap .el-row{
@@ -227,7 +227,7 @@ export default {
     
 }
 .smit{
-    width: 27%;
+    width: 32%;
     color: rgb(235, 153, 47);
     border-radius: 10px;
     background: rgb(239, 241, 241);

@@ -36,7 +36,7 @@ export default {
   },
   mounted() {
     this.getName();
-    // this.tologin();//判断是否登陆
+    this.tologin();//判断是否登陆
       window.onresize = () => {
             // 全屏下监控是否按键了ESC
             if (!this.checkFull()) {
@@ -136,6 +136,7 @@ export default {
   height: 66px;
   background: #fff;
   border-bottom: 1px solid rgba(207, 206, 206, 0.596);
+  box-shadow: 1px 1px 1px #a2e2e2a6;
 }
 
 p {
