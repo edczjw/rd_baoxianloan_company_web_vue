@@ -58,6 +58,7 @@
                 <el-upload
                     class="upload-demo"
                     drag
+                    accept="image/png, image/jpeg,image/bmp,image/jpg"
                     :limit="2"
                     :http-request="Upload"
                     :file-list='fileList'
@@ -166,10 +167,16 @@ export default {
                         response => {
                             if(response.data.code==1){
                               this.$message.error(response.data.msg);
+                              this.show = true;
+                              clearInterval(this.timer);  // 清除定时器
+                              this.timer = null;
                             }
                         },
                         response => {
                             console.log(response);
+                            this.show = true;
+                            clearInterval(this.timer);  // 清除定时器
+                            this.timer = null;
                         }
                     )
                     this.timer = setInterval(() => {
@@ -209,7 +216,9 @@ export default {
                 .then(
                     response => {
                     if(response.data.code==0){
-                            console.log(response.data.msg);
+                        this.$message.success('恭喜你，提交'+response.data.msg);
+                        
+                        this.$router.push("/orderlist");//跳转
                     }else{
                         this.$message.error(response.data.msg);
                     }
@@ -228,7 +237,7 @@ export default {
         beforeAvatarUpload(file) {
         const length = this.fileList.length <= 2;
         const isLt20M = file.size / 1024 / 1024 < 20;
-        const isJPG = file.type === 'image/jpeg'||'image/png'||'image/bmp'||'image/jpg';
+        const isJPG = file.type === 'image/jpeg'||file.type === 'image/png'||file.type === 'image/bmp'||file.type === 'image/jpg';
         
         if (!isJPG) {
           this.$message.error('只能上传jpg/png/bmp/jpeg格式！');
