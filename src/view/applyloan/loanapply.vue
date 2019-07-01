@@ -12,13 +12,13 @@
                     ref="loginform"
                     :model="this.checkform"
                     status-icon
-                    label-width="105px"
+                    label-width="125px"
                     class="demo-ruleForm"
                     size="mini"
                 >
                 <el-row :gutter="24">
                     <el-col :span="17">
-                    <el-form-item label="借款金额(元)" prop="applyLimit">
+                    <el-form-item label="借款金额(元)" prop="applyLimit" :rules="rules.account">
                         <el-input class="ell" placeholder="借款金额请输入整数" v-model.trim="checkform.applyLimit">
                         <template slot="prepend">
                             <i class="el-icon-edit"></i>
@@ -85,7 +85,7 @@
                     
                 </el-checkbox>          
             </div>
-                <el-button type="success" @click="submit()">提交</el-button>
+                <el-button type="success" @click="submit('checkform')">提交</el-button>
             </div>
         </el-card>
 
@@ -123,7 +123,14 @@ export default {
                 applyLimit:"",
                 agreementUrl:"",
                 verifyCode:"",
-            }
+            },
+
+            //输入框验证
+            rules: {
+                account: [
+                { required: true, message: "借款金额不能为空。", trigger: "blur" },
+                { pattern: /^([0-9]{1,})$/, message: '请输入整数，不允许输入小数。', trigger: 'blur'},
+                ]}
         }
     },
     mounted() {
@@ -192,7 +199,10 @@ export default {
         
         },
 
-        submit(){
+        submit(formName){
+            
+      this.$refs[formName].validate((valid) => {
+          if (valid) {
         if(this.availableCredit < this.checkform.applyLimit || this.checkform.applyLimit<1000 || this.checkform.applyLimit>500000)
         {   
             this.$confirm('申请借款金额不得高于当前可用额度，并且一次不得低于1000元，不得高于500000元.', '提示', {
@@ -232,6 +242,11 @@ export default {
             }
             
         }
+        } else {
+              console.log('error submit!!');
+              return false;
+            }
+        })
         },
 
         beforeAvatarUpload(file) {
