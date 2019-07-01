@@ -10,7 +10,7 @@
             <el-form ref="form" :model="form" size="mini" label-width="100px">
                 <el-row :gutter="30">
                     <el-col :span="6">
-                        <el-form-item label="报表日期">
+                        <el-form-item label="报表日期" prop="beginDate">
                             <el-date-picker
                                 v-model="form.beginDate"
                                 type="date"
@@ -21,7 +21,7 @@
                     </el-col>
 
                     <el-col :span="8">
-                        <el-form-item label="至">
+                        <el-form-item label="至" prop="endDate">
                             <el-date-picker
                                 v-model="form.endDate"
                                 type="date"
@@ -45,7 +45,11 @@
 
               <el-table :data="tableData"  border 
                 size="mini" stripe style="width: 100%;">
-                    <el-table-column prop="fileName" label="文件名称" align="center"> </el-table-column>
+                    <el-table-column prop="fileName" label="文件名称" align="center">
+                        <template slot-scope="scope">
+                           {{scope.row.fileName +'.xls'}}
+                        </template>
+                         </el-table-column>
                     <el-table-column prop="createTime" label="生成时间" align="center"> </el-table-column>
                     <el-table-column prop="downloadUrl" label="操作" align="center">
                         <template slot-scope="scope">
@@ -105,7 +109,7 @@ export default {
                     navigator.msSaveBlob(blob);
                 } else {
                     let elink = document.createElement('a');
-                    elink.download = time+filename+'.xls';
+                    elink.download = time + filename+'.xls';
                     elink.style.display = 'none';
                     elink.href = URL.createObjectURL(blob);
                     document.body.appendChild(elink);
@@ -121,6 +125,13 @@ export default {
       search() {
         this.getlist();
       },
+
+      
+      // 重置功能
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+
         make(){
             this.form.channelCd = sessionStorage.getItem("channelCd");
             this.$axios({

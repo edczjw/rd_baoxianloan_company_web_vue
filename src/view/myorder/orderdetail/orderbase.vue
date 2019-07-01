@@ -109,6 +109,8 @@ export default {
   },
   methods: {
       submit(){
+          if(this.form.repayPrincipal < this.detail.surplusPrincipal){
+              
           this.$axios({
                         method: 'post',
                         url: this.$store.state.domain +"/biz/repay",
@@ -133,6 +135,10 @@ export default {
                         console.log(response);
                         }
                      )
+          }
+          else{
+              this.$message.error('还款本金不得大于剩余未还本金！')
+          }
       },
       htick(){
              this.$axios({

@@ -10,7 +10,7 @@
             <el-form ref="form"  size="mini" :model="form" label-width="100px">
                 <el-row :gutter="30">
                 <el-col :span="6">
-                <el-form-item label="订单状态">
+                <el-form-item label="订单状态"  prop="status">
                     <el-select size="mini" v-model="form.status" placeholder="请选择订单状态" clearable>
                     <el-option v-for="item in statuslist"
                         :key="item.type"
@@ -104,7 +104,6 @@ export default {
       // 重置功能
       resetForm(formName) {
         this.$refs[formName].resetFields();
-        this.statuslist="";
         // this.getlist();
       },
 

@@ -9,12 +9,13 @@
                 <div class="keyong"><i class="el-icon-share"></i> 当前可用额度(元)： {{this.availableCredit}}</div>
             <div class="applymo">
                 <el-form
-                    ref="loginform"
+                    ref="checkform"
                     :model="this.checkform"
                     status-icon
                     label-width="125px"
                     class="demo-ruleForm"
                     size="mini"
+                    :rules="rules"
                 >
                 <el-row :gutter="24">
                     <el-col :span="17">
