@@ -73,13 +73,15 @@
                 
                 <div class="smit" v-if="smitshow">
                             <div class="ed">还款本金(元)：
-                                <el-input class="input" size="mini" v-model="form.repayPrincipal" placeholder="还款金额(如200)"
+                                <el-input  v-if="applylimitshow" class="input" size="mini" v-model="form.repayPrincipal" placeholder="还款金额(如200)"
                                 @blur="htick()"></el-input>
+                                <span v-else>{{form.repayPrincipal}}</span>
                             </div>
-                            <p>  还款本金(元)：{{details.repayPrincipal}}</p>
+                            <p>  本次还款本金(元)：{{details.repayPrincipal}}</p>
                             <p>  还款利息(元)：{{details.repayInterest}}</p>
+                            <p v-if="!applylimitshow">  还款罚息(元)：{{details.repayPenalty}}</p>
                             <p>  本次还款总金额(元)：{{details.repayTotalMoney}}</p>
-                        <el-button style="width:100%;margin-top:10px;" type="success" @click="submit()">提交</el-button>
+                        <el-button style="width:100%;margin-top:28px;" size="small" type="success" @click="submit()">提交</el-button>
 
                 </div>
                 </el-card>
@@ -92,6 +94,7 @@ export default {
     return {
         smitshow:true,
         status:"",
+        applylimitshow:true,
         detail:{
         },
 
@@ -104,12 +107,13 @@ export default {
     };
   },
   mounted() {
-      this.getshow()
       this.getdetail();
+      this.getshow()
   },
   methods: {
       submit(){
-          if(this.form.repayPrincipal < this.detail.surplusPrincipal){
+          console.log(this.form.repayPrincipal + "????" + this.detail.surplusPrincipal)
+          if(this.form.repayPrincipal <= this.detail.surplusPrincipal){
               
           this.$axios({
                         method: 'post',
@@ -127,6 +131,7 @@ export default {
                         response => {
                         if(response.data.code==0){
                             this.$message.success('恭喜你，提交成功！');
+                            this.$router.push("/orderlist");//跳转
                         }else{
                             this.$message.error(response.data.msg);
                         }
@@ -163,9 +168,21 @@ export default {
                      )
       },
         getshow(){
-            if(this.$route.query.operation == '去还款'){
+            if(this.$route.query.status == '已逾期'){
+                this.applylimitshow=false
+                this.form.repayPrincipal = this.detail.surplusPrincipal
                 this.smitshow=true
-            }else{
+                this.getdetail();
+            }else if(this.$route.query.status == '已还款'){
+                this.smitshow=false
+                //vue 修改元素样式
+                this.$refs.abc.style.width = '100%';
+            }
+            else if(this.$route.query.status == '放款成功'){
+                this.applylimitshow=true
+                this.smitshow=true
+            }
+            else{
                 this.smitshow=false
                 //vue 修改元素样式
                 this.$refs.abc.style.width = '100%';
@@ -221,7 +238,7 @@ export default {
     border-bottom:1px solid #eee;
 }
 .tap {
-    width: 67%;
+    width: 65%;
     float: right;
 }
 .tap .el-row{
@@ -229,18 +246,26 @@ export default {
     font-size: 14px;
     font-family: '苹方';
     border-bottom: 1px dashed rgba(139, 187, 231, 0.541);
-    padding: 10px 0 0px 20px;
+    padding: 10px 0 10px 20px;
     
 }
+.ed{
+    
+    font-family: '苹方' !important;
+}
 .smit{
+    font-family: '苹方' !important;
     width: 32%;
-    color: rgb(235, 153, 47);
+    color: rgb(241, 16, 155);
     border-radius: 10px;
     background: rgb(239, 241, 241);
     padding: 30px;
-    font-size: 14px;
+    font-size: 16px;
+    border: 1px solid #eee;
     p{
         line-height: 30px;
+        font-family: '苹方' !important;
+        margin-top: 10px;
     }
 
 }

@@ -41,7 +41,7 @@
                     <el-table-column prop="status" label="订单状态" align="center"> </el-table-column>
                     <el-table-column prop="remainTerm"  label="剩余还款天数" align="center">
                         <template slot-scope="scope">
-                            <span  style="color:red;">{{scope.row.remainTerm}}</span>
+                            <span :class="scope.row.remainTerm <=30? 'term':'terms'">{{scope.row.remainTerm}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="createTime" label="订单时间" align="center"> </el-table-column>
@@ -54,7 +54,7 @@
                         <!-- 点击某个客户姓名查看详情 -->
                         <template slot-scope="scope">
                             <el-button type="text" size="small"
-                            @click="gouserdetail(scope.row.processNo,scope.row.operation,scope.row.status)">
+                            @click="gouserdetail(scope.row.processNo,scope.row.operation,scope.row.status,scope.row.applyLimit)">
                             {{scope.row.operation}}</el-button>
                         </template>
                 </el-table-column>
@@ -108,13 +108,14 @@ export default {
       },
 
         //点击操作跳转
-        gouserdetail(processNo,operation,status){
+        gouserdetail(processNo,operation,status,applyLimit){
             this.$router.push({
                 path:"/orderbasedetail",
                 query:{
                     processNo:processNo,
                     operation:operation,
-                    status:status
+                    status:status,
+                    applyLimit:applyLimit
                     }
                 })
         },
@@ -186,6 +187,13 @@ export default {
     border-top: 3px solid rgba(15, 182, 160, 0.849);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+}
+.term{
+    color: red;
+}
+
+.terms{
+    color: black;
 }
 </style>
 
