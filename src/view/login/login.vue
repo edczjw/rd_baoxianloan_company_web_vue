@@ -119,6 +119,9 @@ export default {
                           response => {
                             if(response.data.code==1){
                               this.$message.error(response.data.msg);
+                              this.show = true;
+                              clearInterval(this.timer);  // 清除定时器
+                              this.timer = null;
                             }
                           },
                           response => {
