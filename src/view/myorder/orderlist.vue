@@ -2,14 +2,14 @@
     <div class="goods-wapper">
         <div class="heading-top">
         <el-row>
-        <el-col :span="24">我的订单</el-col>
+        <el-col :span="24"><i class="el-icon-d-arrow-right"></i>我的订单</el-col>
         </el-row>
         </div>
         <el-card class="box-card">
             <div class="search">
-            <el-form ref="form"  size="mini" :model="form" label-width="100px">
-                <el-row :gutter="30">
-                <el-col :span="6">
+            <el-form ref="form"  size="mini" :model="form" label-width="70px">
+                <el-row :gutter="8">
+                <el-col :span="8">
                 <el-form-item label="订单状态"  prop="status">
                     <el-select size="mini" v-model="form.status" placeholder="请选择订单状态" clearable>
                     <el-option v-for="item in statuslist"
@@ -34,10 +34,10 @@
             </div>
 
               <el-table :data="tableData"  border
-                size="small" stripe style="width: 100%;">
+                size="mini" stripe style="width: 100%;">
                     <el-table-column prop="processNo" label="订单编号" align="center"> </el-table-column>
-                    <el-table-column prop="applyLimit" label="借款金额（元）" align="center"> </el-table-column>
-                    <el-table-column prop="applyTerm" label="借款天数（天）" align="center"></el-table-column>
+                    <el-table-column prop="applyLimit" label="借款金额(元)" align="center"> </el-table-column>
+                    <el-table-column prop="applyTerm" label="借款天数(天)" align="center"></el-table-column>
                     <el-table-column prop="status" label="订单状态" align="center"> </el-table-column>
                     <el-table-column prop="remainTerm"  label="剩余还款天数" align="center">
                         <template slot-scope="scope">
@@ -81,7 +81,18 @@ export default {
         return{
             count:0,//总条数
             statuslist:[],
-            tableData:[],
+            tableData:[
+                {
+                status:'已还款',
+                operation:'查看'
+            },{
+                status:'已逾期',
+                operation:"去还款"
+            },{
+                status:'放款成功',
+                operation:"去还款"
+            }
+            ],
 
             form:{
                 channelCd:"",
@@ -187,6 +198,7 @@ export default {
     border-top: 3px solid rgba(15, 182, 160, 0.849);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+    padding: 10px 90px 30px 90px;
 }
 .term{
     color: red;
