@@ -4,7 +4,7 @@
     <!-- 返回顶部 -->
     <div id="dtop" class="gotop" title="返回顶部" @click="movetop">
       <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-ico-top"></use>
+        <use xlink:href="#icon-ico-top" />
       </svg>
       <div class="bg"></div>
       <div class="circle"></div>
@@ -33,7 +33,7 @@ export default {
   },
   mounted() {
     this.getName();
-    this.tologin();//判断是否登陆
+    // this.tologin();//判断是否登陆
     window.addEventListener("scroll", this.returntop, true); // 监听（绑定）滚轮滚动事件
   },
   methods: {
@@ -107,7 +107,8 @@ export default {
 //右边部分整个大页面
 .main-ten {
   margin-left: 200px;
-  padding: 25px 25px;
+  // padding: 25px 25px;
+  padding: 30px 4%;
   transition: all 0.5s;
 }
 
