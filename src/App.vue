@@ -36,12 +36,12 @@ body {
 
 /* 菜单路径 */
 .heading-top{
-    padding: 8px 15px;
-    font-size: 12px;
-    line-height: 24px;
-    margin-bottom: 10px;
+    padding: 5px 15px;
+    font-size: 14px;
+    line-height: 22px;
+    margin-bottom: 20px;
     background-color: #3384d4;
-    border-radius: 4px;
+    border-radius: 2px;
     border: 1px solid #3384d4;
     color: #fff;
 }

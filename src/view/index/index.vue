@@ -33,7 +33,7 @@ export default {
   },
   mounted() {
     this.getName();
-    this.tologin();//判断是否登陆
+    // this.tologin();//判断是否登陆
     window.addEventListener("scroll", this.returntop, true); // 监听（绑定）滚轮滚动事件
   },
   methods: {
@@ -107,21 +107,21 @@ export default {
 //右边部分整个大页面
 .main-ten {
   margin-left: 200px;
-  padding: 25px 25px;
+  padding: 30px 120px;
   transition: all 0.5s;
 }
 
 // 右半部分扩张
 .container-width {
   transition: all 0.5s;
-  margin-left: 70px;
-  padding: 10px 8px;
+  margin-left: 120px;
+  padding: 30px 30px;
 }
 
 .wrapper-inner {
   width: 100%;
   height: 0;
-  padding-bottom: 70%;
+  padding-bottom: 50%;
 
   background: rgb(238, 237, 237);
 }

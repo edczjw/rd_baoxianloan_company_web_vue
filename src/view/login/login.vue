@@ -49,7 +49,7 @@
 
             <el-row :gutter="24">
               <el-col :span="8">
-                <el-button icon="el-icon-mobile-phone" :disabled="disabled=!show"  type="primary" size="medium" 
+                <el-button icon="el-icon-mobile-phone" :disabled="disabled=!show"  size="medium" 
                 @click="send('loginform')">
                   <span v-show="show">获取验证码</span>
                   <span v-show="!show" class="count">{{count}} s</span>
@@ -57,7 +57,7 @@
               </el-col>
 
               <el-col :span="16">
-                  <el-button class="butt1" type="primary" size="medium" @click="login('loginform')">登录</el-button>
+                  <el-button class="butt1" size="medium" @click="login('loginform')">登录</el-button>
               </el-col>
           </el-row>
         </div>
@@ -222,10 +222,10 @@ h1 {
   background-color: #fff;
   position: relative;
   margin: 0 auto;
-  width: 38%;
-  height: 380px;
+  width: 35%;
+  height: 360px;
   margin-top: 30px;
-  border: 1px solid black;
+  border: 1px solid rgb(105, 103, 103);
 }
 .switch {
   width: 100%;
@@ -236,6 +236,8 @@ h1 {
 }
 .lo-mo{
   padding:40px 50px;
+  margin-top:10px;
+  border-top:1px solid rgba(238, 238, 238, 0.705);
 }
 .button-content{
   width: 100%;

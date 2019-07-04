@@ -2,7 +2,7 @@
     <div class="goods-wapper">
         <div class="heading-top">
         <el-row>
-        <el-col :span="24">借款申请</el-col>
+        <el-col :span="24"><i class="el-icon-d-arrow-right"></i>借款申请</el-col>
         </el-row>
         </div>
         <el-card class="box-card">
@@ -20,10 +20,7 @@
                 <el-row :gutter="24">
                     <el-col :span="17">
                     <el-form-item label="借款金额(元)" prop="applyLimit" :rules="rules.account">
-                        <el-input class="ell" placeholder="借款金额请输入整数" v-model.trim="checkform.applyLimit">
-                        <template slot="prepend">
-                            <i class="el-icon-edit"></i>
-                        </template>
+                        <el-input size="mini" class="ell" placeholder="借款金额请输入整数" v-model.trim="checkform.applyLimit">
                         </el-input>
                     </el-form-item>
                     </el-col>
@@ -31,21 +28,19 @@
                 </el-row>
 
                     <el-row :gutter="24">
-                        <el-col :span="17">
+                        <el-col :span="12">
                         <el-form-item label="验证码" prop="verifyCode">
                             <el-input
                             class="ell"
-                            placeholder="请输入验证码"
+                            size="mini"
+                            placeholder="验证码"
                             v-model.trim="checkform.verifyCode"
                             >
-                            <template slot="prepend">
-                                <i class="el-icon-view"></i>
-                            </template>
                             </el-input>
                         </el-form-item>
                         </el-col>
 
-                        <el-col :span="7">
+                        <el-col :span="6.5">
                             <el-button icon="el-icon-mobile-phone" :disabled="disabled=!show" type="primary" size="mini" @click="send()">
                             <span v-show="show">获取验证码</span>
                             <span v-show="!show" class="count">{{count}} s</span>
@@ -53,6 +48,18 @@
                         </el-col>
                     </el-row>
                 </el-form>
+                
+            </div>
+            <div class="dibu">
+
+            <div class="checkbox">
+                <el-checkbox prop="agreementStatus" size="mini" v-model="agreementStatus">已同意并愿意接受 
+                    <a href="https://yixiangweilai.oss-cn-shenzhen.aliyuncs.com/jiekuanxieyi/%E5%80%9F%E6%AC%BE%E5%90%88%E5%90%8C%EF%BC%88%E4%BC%81%E4%B8%9A%E7%BA%BF%E4%B8%8A%E7%89%88%EF%BC%89%EF%BC%8D%E6%98%93%E4%BA%AB%E9%A1%B9%E7%9B%AE%EF%BC%8D%E5%AE%9A%E7%A8%BF1.0%20%E4%B8%8D%E5%8E%BB%E6%A1%86%284%29%281%29%282%29.pdf" target="_blank">
+                    《借款协议》</a>
+                    
+                </el-checkbox>          
+            </div>
+                <el-button type="success" size="small" @click="submit('checkform')">提交</el-button>
             </div>
 
             <div class="submit-image">
@@ -61,6 +68,7 @@
                     drag
                     accept="image/png, image/jpeg,image/bmp,image/jpg"
                     :limit="2"
+                    :show-file-list=false
                     :http-request="Upload"
                     :file-list='fileList'
                     :on-exceed="handleExceed"
@@ -70,24 +78,12 @@
                     multiple>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                    <div class="el-upload__tip" slot="tip"> * 只能上传jpg/png/bmp/jpeg格式</div>
-                    <div slot="tip" class="el-upload__tip">（2份以内（含），每份20M以内（含））</div>
+                    <div class="el-upload__tip tiip" slot="tip"> 仅限jpg/png/bmp/jpeg格式，2份以内(含)，每份20M以内(含)</div>
                     </el-upload>
                     <el-progress v-if="videoFlag" :percentage="videoUploadPercent" style="margin-top:30px;"></el-progress>
                     
             </div>
 
-            <div class="dibu">
-
-            <div class="checkbox">
-                <el-checkbox prop="agreementStatus" v-model="agreementStatus">已同意并愿意接受 
-                    <a href="https://yixiangweilai.oss-cn-shenzhen.aliyuncs.com/jiekuanxieyi/%E5%80%9F%E6%AC%BE%E5%90%88%E5%90%8C%EF%BC%88%E4%BC%81%E4%B8%9A%E7%BA%BF%E4%B8%8A%E7%89%88%EF%BC%89%EF%BC%8D%E6%98%93%E4%BA%AB%E9%A1%B9%E7%9B%AE%EF%BC%8D%E5%AE%9A%E7%A8%BF1.0%20%E4%B8%8D%E5%8E%BB%E6%A1%86%284%29%281%29%282%29.pdf" target="_blank">
-                    《借款协议》</a>
-                    
-                </el-checkbox>          
-            </div>
-                <el-button type="success" @click="submit('checkform')">提交</el-button>
-            </div>
         </el-card>
 
        
@@ -239,7 +235,7 @@ export default {
                     }
                     )
             }else{
-                this.$message.error("必须勾选同意并接受借款协议！");
+                this.$message.error("请阅读借款协议！");
             }
             
         }
@@ -416,47 +412,57 @@ export default {
     width:100%;
 }
 .box-card{
+    position: relative;
     border-top: 3px solid rgba(15, 182, 160, 0.849);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    padding: 40px;
+    padding: 50px 70px;
 }
 .applymo{
-    width: 100%;
+    position: relative;
+    width: 60%;
     font-size: 14px;
-    border: 1px dotted rgb(62, 241, 202);
-    padding: 20px 10px;
     text-align: center;
+    left: 0%;
+    margin-top: 60px;
 }
 .keyong{
+    position: absolute;
+    top: 35px;
+    left: 4%;
     font-family: '苹方';
     line-height: 22px;
-    font-size: 18px;
-    margin-bottom: 30px;
+    font-size: 17px;
     color: rgb(240, 42, 35);
     cursor: pointer;
-    padding: 20px 20px 20px 10px;
-    border-radius: 20px;
-    width: 390px;
+    padding: 10px 20px 10px 10px;
+    width: 32%;
     text-align: left;
     font-weight: bolder;
-    border: 1px solid rgb(241, 178, 62);
+}
+.tiip{
+    text-align: left;
 }
 .submit-image{
-    text-align: center;
-    margin-top: 20px;
+    position: absolute;
+    top: 25%;
+    right: 10%;
     padding: 20px;
-    border: 1px dotted rgb(62, 241, 202);
+    text-align: center;
+    border: 1px solid #eee;
 }
 .dibu{
-    width: 100%;
-    padding: 20px;
-    margin-top: 10px;
+    width: 45%;
+    font-size: 12px !important;
+    padding: 20px 10px;
+    margin-top: 30px;
+    border-top: 1px solid #eee;
     .el-button{
-        width: 100%;
+        position: relative;
+        left: 35%;
+        width: 25%;
     }
     .checkbox{
-        width: 100%;
         margin-bottom: 20px;
         text-align: center;
     }

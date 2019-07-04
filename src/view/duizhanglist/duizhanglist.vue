@@ -2,13 +2,13 @@
     <div class="goods-wapper">
         <div class="heading-top">
         <el-row>
-        <el-col :span="24">对账报表</el-col>
+        <el-col :span="24"><i class="el-icon-d-arrow-right"></i>对账报表</el-col>
         </el-row>
         </div>
         <el-card class="box-card">
             <div class="search">
-            <el-form ref="form" :model="form" size="mini" label-width="100px">
-                <el-row :gutter="30">
+            <el-form ref="form" :model="form" size="mini" label-width="70px">
+                <el-row :gutter="8">
                     <el-col :span="6">
                         <el-form-item label="报表日期" prop="beginDate">
                             <el-date-picker
@@ -20,7 +20,7 @@
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="8">
+                    <el-col :span="7">
                         <el-form-item label="至" prop="endDate">
                             <el-date-picker
                                 v-model="form.endDate"
@@ -32,9 +32,9 @@
                     </el-col>
                     <el-col :span="8">
                         <el-button size="mini" type="primary" @click="make()">
-                        生成报表</el-button>
+                        生成</el-button>
                         <el-button size="mini" type="primary" @click="search()">
-                        查询报表</el-button>
+                        查询</el-button>
                         <el-button size="mini" type="primary" @click="resetForm('form')">
                         重置
                         </el-button>
@@ -201,6 +201,7 @@ export default {
     border-top: 3px solid rgba(15, 182, 160, 0.849);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+    padding: 10px 90px 30px 90px;
 }
 </style>
 

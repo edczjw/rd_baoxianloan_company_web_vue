@@ -52,11 +52,11 @@
 .side {
   position: fixed;
 
-  width: 199px;
+  width: 240px;
   height: 100%;
   transition: all .5s;
   background-color: #fff;
-      border:1px solid rgba(223, 220, 220, 0.568);
+  border:1px solid rgba(141, 175, 185, 0.65);
 }
 
 .side-menu {
