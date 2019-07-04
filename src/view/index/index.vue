@@ -4,7 +4,7 @@
     <!-- 返回顶部 -->
     <div id="dtop" class="gotop" title="返回顶部" @click="movetop">
       <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-ico-top"></use>
+        <use xlink:href="#icon-ico-top" />
       </svg>
       <div class="bg"></div>
       <div class="circle"></div>
