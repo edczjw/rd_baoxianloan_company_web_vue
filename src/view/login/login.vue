@@ -49,7 +49,7 @@
 
             <el-row :gutter="24">
               <el-col :span="8">
-                <el-button icon="el-icon-mobile-phone" :disabled="disabled=!show"  size="medium" 
+                <el-button icon="el-icon-mobile-phone" :disabled="disabled=!show" type="primary" size="medium" 
                 @click="send('loginform')">
                   <span v-show="show">获取验证码</span>
                   <span v-show="!show" class="count">{{count}} s</span>
@@ -57,7 +57,7 @@
               </el-col>
 
               <el-col :span="16">
-                  <el-button class="butt1" size="medium" @click="login('loginform')">登录</el-button>
+                  <el-button class="butt1" size="medium" type="primary" @click="login('loginform')">登录</el-button>
               </el-col>
           </el-row>
         </div>
